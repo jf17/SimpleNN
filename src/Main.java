@@ -6,7 +6,7 @@ import java.util.function.UnaryOperator;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         dots();
 //        digits();
     }
@@ -24,7 +24,7 @@ public class Main {
         int samples = 60000;
         BufferedImage[] images = new BufferedImage[samples];
         int[] digits = new int[samples];
-        File[] imagesFiles = new File("./train").listFiles();
+        File[] imagesFiles = new File("./dataset/digits/train").listFiles();
         for (int i = 0; i < samples; i++) {
             images[i] = ImageIO.read(imagesFiles[i]);
             digits[i] = Integer.parseInt(imagesFiles[i].getName().charAt(10) + "");
