@@ -1,4 +1,8 @@
-public class Layer {
+import java.io.Serializable;
+
+public class Layer implements Serializable {
+
+    private static final long serialVersionUID = 9216696740948170978L;
 
     public int size;
     public double[] neurons;

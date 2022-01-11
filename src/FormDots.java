@@ -21,9 +21,7 @@ public class FormDots extends JFrame implements Runnable, MouseListener {
     public List<Point> points = new ArrayList<>();
 
     public FormDots() {
-        UnaryOperator<Double> sigmoid = x -> 1 / (1 + Math.exp(-x));
-        UnaryOperator<Double> dsigmoid = y -> y * (1 - y);
-        nn = new NeuralNetwork(0.01, sigmoid, dsigmoid, 2, 5, 5, 2);
+        nn = new NeuralNetwork(0.01, NeuralNetworkFunctionName.SIGMOID, NeuralNetworkFunctionName.D_SIGMOID, 2, 5, 5, 2);
 
         this.setSize(w + 16, h + 38);
         this.setVisible(true);

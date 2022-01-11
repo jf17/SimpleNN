@@ -1,21 +1,22 @@
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.function.UnaryOperator;
 
 public class Main {
     public static final double LEARNING_RATE = 0.001;
-    public static final UnaryOperator<Double> SIGMOID = x -> 1 / (1 + Math.exp(-x));
-    public static final UnaryOperator<Double> D_SIGMOID = y -> y * (1 - y);
+    public static final NeuralNetworkFunctionName ACTIVATION = NeuralNetworkFunctionName.SIGMOID;
+    public static final NeuralNetworkFunctionName DERIVATIVE = NeuralNetworkFunctionName.D_SIGMOID;
     public static final String TRAIN_PATH = "./dataset/digits/train";
+    public static final String NEURAL_NETWORK_PATH = "./NeuralNetwork";
     public static final int EPOCHS = 1000;
     public static final int BATCH_SIZE = 100;
 
 
-    public static void main(String[] args) {
-        dots();
-//        digits();
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+//        dots();
+//        digitsTrainNewNeuralNetwork();
+        digitsLoadFromFileNeuralNetwork();
     }
 
     private static void dots() {
@@ -23,8 +24,8 @@ public class Main {
         new Thread(f).start();
     }
 
-    private static void digits() throws IOException {
-        NeuralNetwork nn = new NeuralNetwork(LEARNING_RATE, SIGMOID, D_SIGMOID, 784, 512, 128, 32, 10);
+    private static void digitsTrainNewNeuralNetwork() throws IOException {
+        NeuralNetwork nn = new NeuralNetwork(LEARNING_RATE, ACTIVATION, DERIVATIVE, 784, 512, 128, 32, 10);
 
         int samples = 60000;
         BufferedImage[] images = new BufferedImage[samples];
@@ -64,7 +65,7 @@ public class Main {
                         maxDigit = k;
                     }
                 }
-                if(digit == maxDigit) right++;
+                if (digit == maxDigit) right++;
                 for (int k = 0; k < 10; k++) {
                     errorSum += (targets[k] - outputs[k]) * (targets[k] - outputs[k]);
                 }
@@ -73,7 +74,24 @@ public class Main {
             System.out.println("epoch: " + i + ". correct: " + right + ". error: " + errorSum);
         }
 
+        FileOutputStream outputStream = new FileOutputStream(NEURAL_NETWORK_PATH + "/digit-epochs-" + EPOCHS + ".dat");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+
+        objectOutputStream.writeObject(nn);
+        objectOutputStream.close();
+
         FormDigits f = new FormDigits(nn);
+        new Thread(f).start();
+    }
+
+    private static void digitsLoadFromFileNeuralNetwork() throws IOException, ClassNotFoundException {
+
+        FileInputStream fileInputStream = new FileInputStream(NEURAL_NETWORK_PATH + "/digit-epochs-" + EPOCHS + ".dat");
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+        NeuralNetwork neuralNetwork = (NeuralNetwork) objectInputStream.readObject();
+
+        FormDigits f = new FormDigits(neuralNetwork);
         new Thread(f).start();
     }
 
