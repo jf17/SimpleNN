@@ -14,9 +14,9 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-//        dots();
+        dots();
 //        digitsTrainNewNeuralNetwork();
-        digitsLoadFromFileNeuralNetwork();
+//        digitsLoadFromFileNeuralNetwork();
     }
 
     private static void dots() {
